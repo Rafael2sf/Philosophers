@@ -12,7 +12,7 @@
 
 ################ PROGRAM ################
 
-NAME	=		what
+NAME	=		philosophers
 
 ################ TERMINAL ###############
 
@@ -44,8 +44,8 @@ CF		=		-g -Wall -Werror -Wextra
 
 SRCS	=		$(_SRC)main.c
 OBJS	=		$(patsubst $(_SRC)%.c,$(_OBJ)%.o,$(SRCS))
-DEPS	=		libft.a libph.a
-LIBS	=		-lft -lph
+DEPS	=		libph.a
+LIBS	=		-lph
 
 ################ RULES ##################
 
@@ -55,14 +55,11 @@ $(_OBJ)%.o: $(_SRC)%.c
 	$(CC) $(CF) -c $< -o $@
 
 $(_BIN)$(NAME): deps $(OBJS)
-	$(CC) $(CF) $(LIBS) $(OBJS) -o $@ -L $(_LIB)
+	$(CC) $(CF) -pthread $(LIBS) $(OBJS) -o $@ -L $(_LIB)
 
 ################ DEPS ###################
 
 deps: $(DEPS)
-
-libft.a:
-	$(MKE) libft.a -C src/libft/
 
 libph.a:
 	$(MKE) libph.a -C src/libph/
