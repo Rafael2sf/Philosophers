@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 14:06:53 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/16 18:43:15 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/02/17 16:57:19 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,9 +48,13 @@ void	*ph_init_philosophers(t_args *args)
 
 static void	*ph_init_error(int i, t_args *args)
 {
-	printf("Something went wrong!\n");
-	(void)(i);
-	(void)(args);
-	args->philo[i] = NULL;
+	while (--i >= 0)
+	{
+		pthread_mutex_destroy(&args->philo[i]->right_fork);
+		pthread_join(args->philo[i]->self, NULL);
+		free(args->philo[i]);
+	}
+	free(args->philo);
+	args->philo = NULL;
 	return (NULL);
 }
