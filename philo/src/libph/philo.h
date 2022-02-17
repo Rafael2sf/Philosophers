@@ -18,7 +18,6 @@
 # include <unistd.h>
 # include <pthread.h>
 # include <sys/time.h>
-# include <mlx.h>
 
 typedef unsigned int	t_uint;
 typedef struct timeval	t_time;
@@ -64,8 +63,8 @@ int		ph_errorm(int error_code, char *error_message);
 long	ph_timestamp(void);
 void	ph_usleep_till(long time);
 
+void	*ph_thread(void *args_ptr);
 void	*ph_init_philosophers(t_args *args);
-void	*ph_think_eat_sleep(void *args_ptr);
 void	ph_monitor_philosophers(t_args *args);
 void	ph_clear_philosophers(t_args *args);
 

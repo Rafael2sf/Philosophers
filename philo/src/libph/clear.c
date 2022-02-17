@@ -28,10 +28,8 @@ void	ph_clear_philosophers(t_args *args)
 		if (args->philo[i])
 		{
 			pthread_mutex_unlock(&args->philo[i]->right_fork);
-			if (pthread_mutex_destroy(&args->philo[i]->right_fork) != 0)
-				printf("Fork %d is missing\n", i);
-			if (pthread_join(args->philo[i]->self, NULL) != 0)
-				printf("Philosopher %d was detached\n", i);
+			pthread_mutex_destroy(&args->philo[i]->right_fork);
+			pthread_join(args->philo[i]->self, NULL);
 			free(args->philo[i]);
 		}
 		i++;

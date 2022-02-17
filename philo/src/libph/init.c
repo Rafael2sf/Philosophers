@@ -39,7 +39,7 @@ void	*ph_init_philosophers(t_args *args)
 				(args->philo[0]->left_fork) = &(args->philo[i]->right_fork);
 		if (pthread_mutex_init((&args->philo[i]->right_fork), NULL) != 0)
 			return (ph_init_error(i, args));
-		if (pthread_create(&args->philo[i]->self, NULL, ph_think_eat_sleep, args) != 0)
+		if (pthread_create(&args->philo[i]->self, NULL, ph_thread, args) != 0)
 			return (ph_init_error(i, args));
 		(args->philo[i++]->state) = THINK;
 	}

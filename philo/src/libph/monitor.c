@@ -6,22 +6,24 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 12:19:40 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/16 18:41:59 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/02/17 12:33:55 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 static char	*ph_msg(int state);
-static void	ph_monitor_loop(t_args *args, int *states);
+static void	ph_monitor_loop(t_args *args, int *states, long time, int i);
 static int	ph_check_all_death(t_args *args);
 
 void	ph_monitor_philosophers(t_args *args)
 {
+	long	time;
 	int		*states;
 	int		i;
 
 	i = 0;
+	time = 0;
 	states = malloc(sizeof(int) * args->philo_count);
 	if (!states)
 		return ;
@@ -29,15 +31,13 @@ void	ph_monitor_philosophers(t_args *args)
 		states[i++] = THINK;
 	while (args->time_start == 0)
 		(void)(args);
-	ph_monitor_loop(args, states);
+	usleep(10);
+	ph_monitor_loop(args, states, time, i);
 	free(states);
 }
 
-static void	ph_monitor_loop(t_args *args, int *states)
+static void	ph_monitor_loop(t_args *args, int *states, long time, int i)
 {
-	long	time;
-	int		i;
-
 	while (1)
 	{
 		i = 0;

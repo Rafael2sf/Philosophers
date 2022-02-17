@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 13:10:09 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/16 18:46:57 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/02/17 10:16:48 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static int	ph_think(int id, t_args *args);
 static int	ph_eat(int id, t_args *args, int *eat_count);
 static int	ph_sleep(int id, t_args *args);
 
-void	*ph_think_eat_sleep(void *args_ptr)
+void	*ph_thread(void *args_ptr)
 {
 	t_uint		id;
 	t_args		*args;
@@ -80,7 +80,7 @@ static int	ph_eat(int id, t_args *args, int *eat_count)
 		if (args->time_to_die == -1)
 			return (-1);
 		(args->philo[id]->last_meal) = ph_timestamp();
-		ph_usleep_till(ph_timestamp() + args->time_to_sleep);
+		ph_usleep_till(ph_timestamp() + args->time_to_eat);
 	}
 	pthread_mutex_unlock(args->philo[id]->left_fork);
 	pthread_mutex_unlock(&args->philo[id]->right_fork);
