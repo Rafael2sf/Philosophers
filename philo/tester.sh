@@ -74,8 +74,6 @@ if [ -z "$1" ] || ([ ! -z "$1" ] && [ "$1" == "1" ]); then
 		$PATH$NAME 0 100 100 100
 	printf "$CYN\n@: $PATH$NAME 1 -1 100 100\n$WHT"
 		$PATH$NAME 1 -1 100 100
-	printf "$CYN\n@: $PATH$NAME 1 -1 100 100\n$WHT"
-		$PATH$NAME 1 -1 100 100
 	printf "$CYN\n@: $PATH$NAME 1 100 -1 100\n$WHT"
 		$PATH$NAME 1 100 -1 100
 	printf "$CYN\n@: $PATH$NAME 1 100 100 -1\n$WHT"
