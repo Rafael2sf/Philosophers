@@ -81,10 +81,10 @@ if [ -z "$1" ] || ([ ! -z "$1" ] && [ "$1" == "1" ]); then
 	printf "$CYN\n@: $PATH$NAME 1 100 100 100 0\n$WHT"
 		$PATH$NAME 1 100 100 100 0
 
-	printf "$GRN \nSpecial case [One philosopher]\n$WHT"
-	printf "$YEL Shouldn't be able to eat\n$WHT"
-	printf "$CYN\n@: $PATH$NAME 1 800 100 100\n$WHT"
-		$PATH$NAME 1 800 100 100
+#	printf "$GRN \nSpecial case [One philosopher]\n$WHT"
+#	printf "$YEL Shouldn't be able to eat\n$WHT"
+#	printf "$CYN\n@: $PATH$NAME 1 800 100 100\n$WHT"
+#		$PATH$NAME 1 800 100 100
 fi
 
 # TEST 2

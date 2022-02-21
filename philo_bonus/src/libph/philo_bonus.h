@@ -6,21 +6,47 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:33:21 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/18 17:07:14 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/02/21 18:00:41 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_H
-# define PHILO_H
+#ifndef PHILO_BONUS_H
+# define PHILO_BONUS_H
 
 # include <stdio.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <sys/time.h>
 # include <semaphore.h>
+# include <pthread.h>
+# include <signal.h>
 
 typedef unsigned int	t_uint;
 typedef struct timeval	t_time;
+
+typedef struct s_philo
+{
+	pthread_t	self;
+	int			id;
+	int			state;
+	long		last_meal;
+	int			eat_count;
+}			t_philo;
+
+typedef struct s_args
+{
+	int			*pids;
+	sem_t		*forks;
+	sem_t		*log_msg;
+	sem_t		*died;
+	t_philo		philo;
+	long		time_start;
+	int			eat_ammount;
+	int			time_to_die;
+	int			philo_count;
+	int			time_to_eat;
+	int			time_to_sleep;
+}			t_args;
 
 enum
 {
@@ -30,28 +56,14 @@ enum
 	EAT,
 	SLEEP
 };
+# define MSG_SLEEP "is sleeping"
+# define MSG_EAT "is eating"
+# define MSG_FORK "has taken a fork"
+# define MSG_THINK "is thinking"
+# define STATES_COUNT 5
 
-# define MSG_SLEEP "is sleeping\n"
-# define MSG_EAT "is eating\n"
-# define MSG_FORK "has taken a fork\n"
-# define MSG_THINK "is thinking\n"
-# define MSG_DIED "died\n"
-
-typedef struct s_args
-{
-	sem_t	*forks;
-	sem_t	*log_msg;
-	int		*pids;
-	int		philo_count;
-	int		time_to_die;
-	int		time_to_eat;
-	int		time_to_sleep;
-	int		eat_ammount;
-	long	time_start;
-}			t_args;
-
-#define SEM_FRK "sem_frk"
-#define SEM_LOG "sem_log"
+# define SEM_FRK "sem_frk"
+# define SEM_LOG "sem_log"
 
 int		ph_atoi(const char *str);
 size_t	ph_putstr(int fd, const char *s);
@@ -60,7 +72,8 @@ long	ph_timestamp(void);
 void	ph_usleep_till(long time);
 
 void	*ph_init_philosphers(t_args *args);
-void	ph_process(t_args *args, int id);
+void	*ph_process(t_args *args, int id);
+void	*ph_monitor(void *args_ptr);
 void	ph_clear_philosophers(t_args *args);
 
 #endif

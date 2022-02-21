@@ -46,7 +46,8 @@ SRCS_	=		\
 				clear.c \
 				init.c \
 				process.c \
-				utils.c
+				utils.c \
+				monitor.c
 				
 SRCS	=		$(addprefix $(_SRC), $(SRCS_))
 OBJS	=		$(patsubst $(_SRC)%.c,$(_OBJ)%.o,$(SRCS))
