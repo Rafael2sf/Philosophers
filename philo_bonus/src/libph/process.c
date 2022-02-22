@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 13:10:09 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/22 12:25:15 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/02/22 12:28:59 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,14 +57,11 @@ static int	ph_think(int id, t_args *args)
 			usleep(10);
 		return (-1);
 	}
-	else
-	{
-		sem_wait(args->forks);
-		if (args->time_to_die == -1)
-			return (-1);
-		(args->philo.state) = FORK_2;
-		usleep(10);
-	}
+	sem_wait(args->forks);
+	if (args->time_to_die == -1)
+		return (-1);
+	(args->philo.state) = FORK_2;
+	usleep(100);
 	return (0);
 }
 
