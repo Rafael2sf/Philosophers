@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:33:21 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/21 18:00:41 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/02/22 12:07:16 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,6 @@ typedef struct s_args
 	int			*pids;
 	sem_t		*forks;
 	sem_t		*log_msg;
-	sem_t		*died;
 	t_philo		philo;
 	long		time_start;
 	int			eat_ammount;

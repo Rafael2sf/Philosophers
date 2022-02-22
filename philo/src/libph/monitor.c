@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 12:19:40 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/17 15:48:19 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/02/22 11:56:58 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ static void	ph_monitor_loop(t_args *args, int *states, long time, int i)
 			if (args->philo[i]->state != -1
 				&& (time - args->philo[i]->last_meal) >= args->time_to_die)
 			{
-				printf("%ld %d died\n", time - args->time_start, i);
+				printf("%ld %d died\n", time - args->time_start, i + 1);
 				(args->time_to_die) = -1;
 				return ;
 			}
@@ -55,7 +55,7 @@ static void	ph_monitor_loop(t_args *args, int *states, long time, int i)
 				&& states[i] != args->philo[i]->state)
 			{
 				printf("%ld %d %s\n", time - args->time_start,
-					i, ph_msg(args->philo[i]->state));
+					i + 1, ph_msg(args->philo[i]->state));
 				states[i] = (args->philo[i]->state);
 			}
 			if (ph_check_all_death(args))

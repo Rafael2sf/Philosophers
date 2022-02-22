@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:31:13 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/18 17:38:17 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/02/22 12:06:12 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static int	ph_parse_args(int argc, char **argv, t_args *args)
 
 static int	ph_check_arg(const char *s)
 {
-	if (!s)
+	if (!s || !*s)
 		return (0);
 	while (*s == '\t' || *s == '\n' || *s == '\v'
 		|| *s == '\f' || *s == '\r' || *s == ' ')

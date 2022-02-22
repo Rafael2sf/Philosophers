@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 12:19:40 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/21 17:24:08 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/02/22 12:17:42 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,21 +39,17 @@ static void	ph_monitor_loop(t_args *args, int *state, long time)
 			&& (time - args->philo.last_meal) >= args->time_to_die)
 		{
 			sem_wait(args->log_msg);
-			printf("%ld %d died\n", time - args->time_start, args->philo.id);
-			//sem_post(args->log_msg);
+			printf("%ld %d died\n",
+				time - args->time_start, args->philo.id + 1);
 			sem_close(args->forks);
-			sem_close(args->log_msg);
-			exit(1);
-		}
-		if (args->eat_ammount > 0
-			&& (args->philo.eat_count) == (args->eat_ammount))
+			(args->time_to_die) = -1;
 			return ;
-		if (args->philo.state != -1
-			&& (*state != args->philo.state))
+		}
+		if (args->philo.state != -1 && (*state != args->philo.state))
 		{
 			sem_wait(args->log_msg);
 			printf("%ld %d %s\n", time - args->time_start,
-				args->philo.id, ph_msg(args->philo.state));
+				args->philo.id + 1, ph_msg(args->philo.state));
 			sem_post(args->log_msg);
 			(*state) = (args->philo.state);
 		}

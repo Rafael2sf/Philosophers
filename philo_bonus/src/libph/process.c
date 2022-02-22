@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 13:10:09 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/21 17:22:50 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/02/22 12:25:15 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,9 @@ void	*ph_process(t_args *args, int id)
 			break ;
 		if (ph_sleep(args) == -1)
 			break ;
-		usleep(100);
 	}
-	//(args->philo.state) = -1;
+	sem_close(args->forks);
+	sem_close(args->log_msg);
 	exit(1);
 	return (NULL);
 }
@@ -51,11 +51,20 @@ static int	ph_think(int id, t_args *args)
 		return (-1);
 	(args->philo.state) = FORK_1;
 	usleep(100);
-	sem_wait(args->forks);
-	if (args->time_to_die == -1)
+	if (args->philo_count == 1)
+	{
+		while (args->time_to_die != -1)
+			usleep(10);
 		return (-1);
-	(args->philo.state) = FORK_2;
-	usleep(100);
+	}
+	else
+	{
+		sem_wait(args->forks);
+		if (args->time_to_die == -1)
+			return (-1);
+		(args->philo.state) = FORK_2;
+		usleep(10);
+	}
 	return (0);
 }
 
@@ -68,12 +77,12 @@ static int	ph_eat(t_args *args)
 	if (args->eat_ammount > 0)
 		(args->philo.eat_count) += 1;
 	(args->philo.last_meal) = ph_timestamp();
-	ph_usleep_till((args->philo.last_meal) + args->time_to_eat);
+	ph_usleep_till(args->philo.last_meal + args->time_to_eat);
 	sem_post(args->forks);
 	sem_post(args->forks);
 	if (args->eat_ammount > 0
 		&& (args->philo.eat_count) == (args->eat_ammount))
-		exit(0);
+		return (-1);
 	return (0);
 }
 
@@ -82,7 +91,6 @@ static int	ph_sleep(t_args *args)
 	if (args->time_to_die == -1)
 		return (-1);
 	(args->philo.state) = SLEEP;
-	usleep(100);
 	ph_usleep_till(ph_timestamp() + args->time_to_sleep);
 	return (0);
 }
