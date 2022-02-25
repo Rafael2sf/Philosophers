@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:33:21 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/22 12:07:16 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/02/23 13:11:44 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@
 # include <semaphore.h>
 # include <pthread.h>
 # include <signal.h>
+# include <sys/wait.h>
+# include <fcntl.h>
 
 typedef unsigned int	t_uint;
 typedef struct timeval	t_time;
