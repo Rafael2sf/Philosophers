@@ -6,15 +6,15 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/14 12:19:40 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/22 11:56:58 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/02/24 13:49:36 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-static char	*ph_msg(int state);
+static void	ph_init_monitor(t_args *args, int *states);
 static void	ph_monitor_loop(t_args *args, int *states, long time, int i);
-static int	ph_check_all_death(t_args *args);
+char		*ph_msg(int state);
 
 void	ph_monitor_philosophers(t_args *args)
 {
@@ -27,69 +27,42 @@ void	ph_monitor_philosophers(t_args *args)
 	states = malloc(sizeof(int) * args->philo_count);
 	if (!states)
 		return ;
-	while (i < args->philo_count)
-		states[i++] = THINK;
-	while (args->time_start == 0)
-		(void)(args);
-	usleep(10);
+	ph_init_monitor(args, states);
 	ph_monitor_loop(args, states, time, i);
 	free(states);
 }
 
-static void	ph_monitor_loop(t_args *args, int *states, long time, int i)
+static void	ph_init_monitor(t_args *args, int *states)
 {
-	while (1)
-	{
-		i = 0;
-		time = ph_timestamp();
-		while (i < args->philo_count)
-		{
-			if (args->philo[i]->state != -1
-				&& (time - args->philo[i]->last_meal) >= args->time_to_die)
-			{
-				printf("%ld %d died\n", time - args->time_start, i + 1);
-				(args->time_to_die) = -1;
-				return ;
-			}
-			if (args->philo[i]->state != -1
-				&& states[i] != args->philo[i]->state)
-			{
-				printf("%ld %d %s\n", time - args->time_start,
-					i + 1, ph_msg(args->philo[i]->state));
-				states[i] = (args->philo[i]->state);
-			}
-			if (ph_check_all_death(args))
-				return ;
-			i++;
-		}
-	}
-}
-
-static char	*ph_msg(int state)
-{
-	static char	*msg_list[STATES_COUNT];
-
-	if (!msg_list[0])
-	{
-		msg_list[0] = MSG_THINK;
-		msg_list[1] = MSG_FORK;
-		msg_list[2] = MSG_FORK;
-		msg_list[3] = MSG_EAT;
-		msg_list[4] = MSG_SLEEP;
-	}
-	return (msg_list[state]);
-}
-
-static int	ph_check_all_death(t_args *args)
-{
-	int	i;
+	int		i;
 
 	i = 0;
-	while (i < args->philo_count)
+	while (1)
 	{
-		if (args->philo[i]->state != -1)
-			return (0);
-		i++;
+		pthread_mutex_lock(&args->m1);
+		if (i < args->philo_count)
+			states[i++] = THINK;
+		else
+			break ;
+		pthread_mutex_unlock(&args->m1);
 	}
-	return (1);
+	pthread_mutex_unlock(&args->m1);
+	while (1)
+	{
+		pthread_mutex_lock(&args->m2);
+		if (args->time_start != 0)
+			break ;
+		pthread_mutex_unlock(&args->m2);
+		usleep(100);
+	}
+	pthread_mutex_unlock(&args->m2);
+}
+
+static void	ph_monitor_loop(t_args *args, int *states, long time, int i)
+{
+	(void)(args);
+	(void)(states);
+	(void)(time);
+	(void)(i);
+	return ;
 }

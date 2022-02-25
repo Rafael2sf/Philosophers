@@ -6,13 +6,14 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 14:06:53 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/17 16:57:19 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/02/24 14:50:48 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 static void	*ph_init_error(int i, t_args *args);
+static int	ph_init_mutexes(t_args *args);
 
 /**
  * Allocate memory for each philosopher and start threads
@@ -26,8 +27,11 @@ void	*ph_init_philosophers(t_args *args)
 		return (NULL);
 	i = 0;
 	(args->time_start) = 0;
+	if (ph_init_mutexes(args) == -1)
+		return (ph_init_error(i, args));
 	while (i < (args->philo_count))
 	{
+		pthread_mutex_lock(&args->m1);
 		(args->philo[i]) = (t_philo *)malloc(sizeof(t_philo));
 		if ((args->philo[i]) == NULL)
 			return (ph_init_error(i, args));
@@ -42,6 +46,8 @@ void	*ph_init_philosophers(t_args *args)
 		if (pthread_create(&args->philo[i]->self, NULL, ph_thread, args) != 0)
 			return (ph_init_error(i, args));
 		(args->philo[i++]->state) = THINK;
+		usleep(100);
+		pthread_mutex_unlock(&args->m1);
 	}
 	return (args);
 }
@@ -55,6 +61,17 @@ static void	*ph_init_error(int i, t_args *args)
 		free(args->philo[i]);
 	}
 	free(args->philo);
-	args->philo = NULL;
+	pthread_mutex_destroy(&args->m1);
+	pthread_mutex_destroy(&args->m2);
+	(args->philo) = NULL;
 	return (NULL);
+}
+
+static int	ph_init_mutexes(t_args *args)
+{
+	if (pthread_mutex_init(&args->m1, NULL) != 0)
+		return (-1);
+	if (pthread_mutex_init(&args->m2, NULL) != 0)
+		return (-1);
+	return (0);	
 }

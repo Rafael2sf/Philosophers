@@ -58,7 +58,7 @@ all: $(NAME)
 $(_OBJ)%.o: $(_SRC)%.c
 	$(CC) $(CF) -c $< -o $@
 
-$(_BIN)$(NAME): $(DEPS) $(OBJS)
+$(NAME): $(DEPS) $(OBJS)
 	$(CC) $(CF) $(LIBS) $(OBJS) -o $@ -L $(_LIB)
 
 ################ DEPS ###################

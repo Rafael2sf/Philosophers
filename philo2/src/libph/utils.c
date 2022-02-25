@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 13:56:47 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/24 11:12:34 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/02/25 18:13:35 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,8 +69,11 @@ long	ph_timestamp(void)
 	return ((curr_time.tv_sec * 1000) + (curr_time.tv_usec / 1000));
 }
 
-void	ph_usleep_till(long time)
+void	ph_usleep_till(t_data *data, long time)
 {
 	while (ph_timestamp() < time)
-		(void)(time);
+	{
+		if (ph_timestamp() - data->last_meal >= data->time_to_die)
+			break ;
+	}
 }

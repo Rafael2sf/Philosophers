@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 14:18:45 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/22 11:54:21 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/02/24 13:49:47 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ void	ph_clear_philosophers(t_args *args)
 	}
 	free(args->philo);
 	(args->philo) = NULL;
+	pthread_mutex_destroy(&args->m1);
+	pthread_mutex_destroy(&args->m2);
 }
 
 static void	ph_threads_wait(t_args *args)

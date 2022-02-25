@@ -43,12 +43,12 @@ CF		=		-g -Wall -Werror -Wextra
 ################### FILES ###############
 
 SRCS_	=		\
-				clear.c \
 				init.c \
 				utils.c \
+				clear.c \
 				thread.c \
-				monitor.c \
-				thread_utils.c
+				wait.c \
+				log.c
 
 SRCS	=		$(addprefix $(_SRC), $(SRCS_))
 OBJS	=		$(patsubst $(_SRC)%.c,$(_OBJ)%.o,$(SRCS))
