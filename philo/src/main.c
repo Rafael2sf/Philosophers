@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:31:13 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/22 12:06:12 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/02/25 12:11:10 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ time_to_eat time_to_sleep [number_of_times_each_must_eat]\n"));
 		return (2);
 	if (!ph_init_philosophers(&args))
 		return (ph_errorm(2, "Error\n"));
-	ph_monitor_philosophers(&args);
+	ph_wait_philosophers(&args);
 	ph_clear_philosophers(&args);
 	return (0);
 }

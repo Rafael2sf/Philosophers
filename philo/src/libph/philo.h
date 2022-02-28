@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:33:21 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/24 12:55:06 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/02/28 12:01:00 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,8 @@
 
 typedef unsigned int	t_uint;
 typedef struct timeval	t_time;
+typedef pthread_mutex_t	t_mutex;
+typedef pthread_t		t_thread;
 
 enum
 {
@@ -36,42 +38,51 @@ enum
 # define MSG_THINK "is thinking"
 # define STATES_COUNT 5
 
-typedef struct s_philo
+typedef struct s_phil
 {
-	int				state;
-	pthread_t		self;
-	pthread_mutex_t	*left_fork;
-	pthread_mutex_t	right_fork;
-	long			last_meal;
-	int				eat_count;
-}			t_philo;
+	int			alive;
+	t_thread	self;
+	t_mutex		*left_fork;
+	t_mutex		right_fork;
+	long		last_meal;
+}				t_phil;
+
+typedef struct s_data
+{
+	int		id;
+	int		time_to_eat;
+	int		time_to_die;
+	int		time_to_sleep;
+	int		eat_ammount;
+	int		eat_count;
+	long	last_meal;
+	t_phil	*self;
+}			t_data;
 
 typedef struct s_args
 {
-	int				philo_count;
-	int				time_to_die;
-	int				time_to_eat;
-	int				time_to_sleep;
-	int				eat_ammount;
-	long			time_start;
-	t_philo			**philo;
-	pthread_mutex_t	m1;
-	pthread_mutex_t	m2;
+	int		philo_count;
+	int		time_to_die;
+	int		time_to_eat;
+	int		time_to_sleep;
+	int		eat_ammount;
+	long	time_start;
+	int		over;
+	t_mutex	m1;
+	t_phil	*p;
 }			t_args;
 
 int		ph_atoi(const char *str);
 size_t	ph_putstr(int fd, const char *s);
 int		ph_errorm(int error_code, char *error_message);
 long	ph_timestamp(void);
-void	ph_usleep_till(long time);
+void	ph_usleep_till(t_data *data, long time);
 
-void	*ph_thread(void *args_ptr);
 void	*ph_init_philosophers(t_args *args);
-void	ph_monitor_philosophers(t_args *args);
+void	ph_wait_philosophers(t_args *args);
 void	ph_clear_philosophers(t_args *args);
 
-int		ph_update(t_args *args, int id, int new_state);
-void	ph_init_thread(t_args *args, int *id, int *eat_count, int *id_counter);
-char	*ph_msg(int state);
+void	*ph_routine(void *args_ptr);
+int		ph_log(t_args *args, t_data *data, char *str, int sleep_time);
 
 #endif

@@ -2,7 +2,7 @@
 
 # Philosophers
 
-NAME=philosophers
+NAME=a.out
 PATH=./
 
 # Variables
