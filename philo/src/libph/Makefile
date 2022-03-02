@@ -38,7 +38,7 @@ _LIB	=		../../libs/
 
 CC		=		gcc
 AR		=		ar rcs
-CF		=		-g -Wall -Werror -Wextra
+CFLAGS	=		-g -Wall -Werror -Wextra
 
 ################### FILES ###############
 
@@ -58,7 +58,7 @@ OBJS	=		$(patsubst $(_SRC)%.c,$(_OBJ)%.o,$(SRCS))
 all: $(NAME)
 
 $(_OBJ)%.o: $(_SRC)%.c
-	$(CC) $(CF) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(_LIB) $(_LIB)$(NAME)
 $(_LIB)$(NAME): $(_OBJ) $(OBJS)

@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:33:21 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/28 12:01:00 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/03/02 12:09:51 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <pthread.h>
 # include <sys/time.h>
 
+typedef unsigned long	t_ulong;
 typedef unsigned int	t_uint;
 typedef struct timeval	t_time;
 typedef pthread_mutex_t	t_mutex;
@@ -44,7 +45,7 @@ typedef struct s_phil
 	t_thread	self;
 	t_mutex		*left_fork;
 	t_mutex		right_fork;
-	long		last_meal;
+	t_ulong		last_meal;
 }				t_phil;
 
 typedef struct s_data
@@ -55,7 +56,7 @@ typedef struct s_data
 	int		time_to_sleep;
 	int		eat_ammount;
 	int		eat_count;
-	long	last_meal;
+	t_ulong	last_meal;
 	t_phil	*self;
 }			t_data;
 
@@ -66,8 +67,8 @@ typedef struct s_args
 	int		time_to_eat;
 	int		time_to_sleep;
 	int		eat_ammount;
-	long	time_start;
 	int		over;
+	t_ulong	time_start;
 	t_mutex	m1;
 	t_phil	*p;
 }			t_args;
@@ -75,14 +76,14 @@ typedef struct s_args
 int		ph_atoi(const char *str);
 size_t	ph_putstr(int fd, const char *s);
 int		ph_errorm(int error_code, char *error_message);
-long	ph_timestamp(void);
-void	ph_usleep_till(t_data *data, long time);
+t_ulong	ph_timestamp(void);
+void	ph_usleep_till(t_data *data, t_ulong time);
 
 void	*ph_init_philosophers(t_args *args);
 void	ph_wait_philosophers(t_args *args);
 void	ph_clear_philosophers(t_args *args);
 
 void	*ph_routine(void *args_ptr);
-int		ph_log(t_args *args, t_data *data, char *str, int sleep_time);
+int		ph_log(t_args *args, t_data *data, char *str, t_ulong sleep_time);
 
 #endif

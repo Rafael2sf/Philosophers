@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 14:51:33 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/28 14:16:19 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/03/02 12:05:41 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,16 @@ void	*ph_routine(void *args_ptr)
 	ph_parse_data(args, &data, &id_counter);
 	while (1)
 	{
-		if (data.eat_count == data.eat_ammount)
+		if (ph_log(args, &data, "is thinking", 0) == -1)
 			break ;
 		if (ph_forks(args, &data) == -1)
 			break ;
 		if (ph_eat(args, &data) == -1)
 			break ;
-		if (ph_log(args, &data, "is sleeping", (data.time_to_sleep)) == -1)
+		if (data.eat_count == data.eat_ammount)
 			break ;
-		if (ph_log(args, &data, "is thinking", 0) == -1)
+		if (ph_log(args, &data, "is sleeping",
+				((t_ulong)data.time_to_sleep) * 1000) == -1)
 			break ;
 		usleep(100);
 	}
@@ -77,7 +78,8 @@ static int	ph_forks(t_args *args, t_data *data)
 		return (-1);
 	}
 	if (args->philo_count == 1)
-		ph_usleep_till(data, ph_timestamp() + data->time_to_die);
+		ph_usleep_till(data, ph_timestamp()
+			+ ((t_ulong)data->time_to_die) * 1000);
 	else if (data->id % 2 == 0)
 		pthread_mutex_lock(data->self->left_fork);
 	else
@@ -93,7 +95,8 @@ static int	ph_eat(t_args *args, t_data *data)
 		pthread_mutex_unlock(data->self->left_fork);
 		return (-1);
 	}
-	if (ph_log(args, data, "is eating", (data->time_to_eat)) == -1)
+	if (ph_log(args, data, "is eating",
+			((t_ulong)data->time_to_eat) * 1000) == -1)
 	{
 		pthread_mutex_unlock(&data->self->right_fork);
 		pthread_mutex_unlock(data->self->left_fork);

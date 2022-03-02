@@ -38,7 +38,7 @@ _BIN	=		./
 ############### COMPILER ################
 
 CC		=		gcc
-CF		=		-Wall -Werror -Wextra
+CFLAGS	=		-Wall -Werror -Wextra
 
 ################ FILES ##################
 
@@ -56,10 +56,10 @@ LIBS	+=		-pthread
 all: $(NAME)
 
 $(_OBJ)%.o: $(_SRC)%.c
-	$(CC) $(CF) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(DEPS) $(OBJS)
-	$(CC) $(CF) $(LIBS) $(OBJS) -o $@ -L $(_LIB)
+	$(CC) $(CFLAGS) $(LIBS) $(OBJS) -o $@ -L $(_LIB)
 
 ################ DEPS ###################
 

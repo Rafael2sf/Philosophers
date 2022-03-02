@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 14:56:35 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/28 14:30:12 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/03/02 12:09:39 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,9 @@ void	ph_wait_philosophers(t_args *args)
 	int	i;
 
 	i = 0;
+	pthread_mutex_lock(&args->m1);
 	ph_wait_over(args);
+	pthread_mutex_unlock(&args->m1);
 	while (1)
 	{
 		if (i == 0)
@@ -48,16 +50,17 @@ static void	ph_wait_over(t_args *args)
 
 	i = 0;
 	dead_count = 0;
-	pthread_mutex_lock(&args->m1);
 	while (i < args->philo_count)
 	{
 		if (args->over == 1)
 			break ;
 		if (!args->p[i].alive)
 			dead_count++;
-		else if (ph_timestamp() - (args->p[i].last_meal) >= args->time_to_die)
+		else if (ph_timestamp() - (args->p[i].last_meal)
+			>= (t_ulong)(args->time_to_die * 1000))
 		{
-			printf("%ld\t%d\tdied\n", ph_timestamp() - (args->time_start), i + 1);
+			printf("%ld %d died\n",
+				(ph_timestamp() - (args->time_start)) / 1000, i + 1);
 			(args->over) = 1;
 			break ;
 		}
@@ -67,7 +70,6 @@ static void	ph_wait_over(t_args *args)
 		if (i == (args->philo_count))
 			ph_wait_over_reset(args, &i, &dead_count);
 	}
-	pthread_mutex_unlock(&args->m1);
 }
 
 static void	ph_wait_over_reset(t_args *args, int *i, int *dead_count)
@@ -75,6 +77,6 @@ static void	ph_wait_over_reset(t_args *args, int *i, int *dead_count)
 	pthread_mutex_unlock(&args->m1);
 	(*i) = 0;
 	(*dead_count) = 0;
-	usleep(100);
+	usleep(1000);
 	pthread_mutex_lock(&args->m1);
 }
