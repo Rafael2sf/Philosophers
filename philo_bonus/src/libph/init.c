@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 10:43:30 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/28 12:27:50 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/03/04 17:36:37 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,10 @@ void	*ph_init_philosphers(t_args *args)
 	(args->pids) = (int *)malloc(sizeof(int) * (args->philo_count));
 	if (!args->pids)
 		return (NULL);
+	if (ph_open_sem_list(args) == -1)
+		return (ph_child_error(args));
+	(args->time_start) = ph_timestamp();
+	(args->philo.last_meal) = (args->time_start);
 	while (i < args->philo_count)
 	{
 		(args->pids[i]) = fork();
@@ -34,13 +38,8 @@ void	*ph_init_philosphers(t_args *args)
 			return (ph_fork_error(args, i));
 		if (args->pids[i] == 0)
 		{
-			if (ph_open_sem_list(args) == -1)
-				return (ph_child_error(args));
-			if (pthread_create(&args->philo.self, NULL, ph_monitor, args) == -1)
-				return (ph_child_error(args));
-			if (pthread_detach(args->philo.self) == -1)
-				return (ph_child_error(args));
 			ph_process(args, i);
+			ph_child_error(args);
 		}
 		i++;
 	}
@@ -52,7 +51,7 @@ static int	ph_open_sem_list(t_args *args)
 	(args->forks) = sem_open(SEM_FRK, O_CREAT, 0644, (args->philo_count));
 	if (args->forks == SEM_FAILED)
 		return (-1);
-	(args->log_msg) = sem_open(SEM_LOG, O_CREAT, 0644, 1);
+	(args->log_msg) = sem_open(SEM_LOG, O_CREAT, 0644, 0);
 	if (args->log_msg == SEM_FAILED)
 	{
 		sem_close(args->forks);
@@ -64,10 +63,10 @@ static int	ph_open_sem_list(t_args *args)
 
 static void	*ph_fork_error(t_args *args, int i)
 {
+	sem_close(args->forks);
+	sem_close(args->log_msg);
 	while (--i <= 0)
-	{
 		kill(args->pids[i], SIGKILL);
-	}
 	free(args->pids);
 	(args->pids) = NULL;
 	return (NULL);

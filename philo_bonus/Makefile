@@ -38,30 +38,33 @@ _BIN	=		./
 ############### COMPILER ################
 
 CC		=		gcc
-CF		=		-g -Wall -Werror -Wextra
+CFLAGS	=		-Wall -Werror -Wextra 
+CFLAGS	+=		-fsanitize=thread
 
 ################ FILES ##################
 
 SRCS	=		$(_SRC)main.c
 OBJS	=		$(patsubst $(_SRC)%.c,$(_OBJ)%.o,$(SRCS))
-DEPS	=		libph.a
-LIBS	=		-lph
+
+DEPS_	=		libph.a
+DEPS	=		$(addprefix $(_LIB), $(DEPS_))
+
+LIBS	=		$(patsubst lib%.a,-l%,$(DEPS_))
+LIBS	+=		-pthread
 
 ################ RULES ##################
 
-all: deps $(NAME)
+all: $(NAME)
 
 $(_OBJ)%.o: $(_SRC)%.c
-	$(CC) $(CF) -c $< -o $@
+	$(CC) $(CFLAGS) -c $< -o $@
 
-$(_BIN)$(NAME): deps $(OBJS)
-	$(CC) $(CF) -pthread $(LIBS) $(OBJS) -o $@ -L $(_LIB)
+$(NAME): $(DEPS) $(OBJS)
+	$(CC) $(CFLAGS) $(LIBS) $(OBJS) -o $@ -L $(_LIB)
 
 ################ DEPS ###################
 
-deps: $(DEPS)
-
-libph.a:
+$(_LIB)libph.a: $(shell make -C src/libph -q libph.a || echo force)
 	$(MKE) libph.a -C src/libph/
 
 ############## STRUCTURE ################
@@ -90,4 +93,4 @@ re: fclean all
 
 rebonus: fclean bonus
 
-.PHONY: all deps clean fclean re rebonus
+.PHONY: all clean fclean re rebonus force

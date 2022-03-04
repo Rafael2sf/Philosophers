@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 14:51:33 by rafernan          #+#    #+#             */
-/*   Updated: 2022/03/02 12:05:41 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/03/02 16:31:45 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ static void	ph_parse_data(t_args *args, t_data *data, int *id_counter)
 	(data->eat_ammount) = (args->eat_ammount);
 	(data->eat_count) = 0;
 	(data->self) = &(args->p[data->id]);
+	(data->philo_count) = (args->philo_count);
 	(args->p)[(data->id)].alive = 1;
 	pthread_mutex_unlock(&args->m1);
 }
@@ -77,7 +78,7 @@ static int	ph_forks(t_args *args, t_data *data)
 			pthread_mutex_unlock(data->self->left_fork);
 		return (-1);
 	}
-	if (args->philo_count == 1)
+	if (data->philo_count == 1)
 		ph_usleep_till(data, ph_timestamp()
 			+ ((t_ulong)data->time_to_die) * 1000);
 	else if (data->id % 2 == 0)

@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 11:32:09 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/22 12:11:53 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/03/04 11:25:46 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,10 +20,7 @@ void	ph_clear_philosophers(t_args *args)
 	i = 0;
 	while (i < (args->philo_count))
 	{
-		if (args->philo_count == 1)
-			waitpid(args->pids[i], NULL, 0);
-		else
-			waitpid(-1, &val, 0);
+		waitpid(-1, &val, 0);
 		if (val == 256)
 		{
 			while (i < (args->philo_count))

@@ -6,88 +6,94 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/11 13:10:09 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/28 12:27:52 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/03/04 18:07:56 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-static int	ph_think(int id, t_args *args);
-static int	ph_eat(t_args *args);
-static int	ph_sleep(t_args *args);
+static int	ph_think(int id, t_args *args, t_data *data);
+static int	ph_eat(t_args *args, t_data *data);
+static int	ph_sleep(t_args *args, t_data *data);
+static void	ph_parse(t_args *args, t_data *data, int id);
 
 void	*ph_process(t_args *args, int id)
 {
-	free(args->pids);
-	(args->philo.id) = id;
-	(args->philo.eat_count) = 0;
-	(args->time_start) = ph_timestamp();
-	(args->philo.last_meal) = (args->time_start);
+	t_data	data;
+
+	if (id == args->philo_count - 1)
+		sem_post(args->log_msg);
+	ph_parse(args, &data, id);
+	if (pthread_create(&args->philo.self, NULL, ph_monitor, args) == -1)
+		return (NULL);
+	//if (pthread_detach(args->philo.self) == -1)
+	//	return (NULL);
 	while (1)
 	{
-		if (ph_think(id, args) == -1)
+		if (ph_think(id, args, &data) == -1)
 			break ;
-		if (ph_eat(args) == -1)
+		if (ph_eat(args, &data) == -1)
 			break ;
-		if (ph_sleep(args) == -1)
+		if (ph_sleep(args, &data) == -1)
 			break ;
 	}
 	sem_close(args->forks);
 	sem_close(args->log_msg);
+	pthread_join(args->philo.self, NULL);
 	exit(1);
 	return (NULL);
 }
 
-static int	ph_think(int id, t_args *args)
+static int	ph_think(int id, t_args *args, t_data *data)
 {
-	if (args->time_to_die == -1)
+	if (ph_log(args, data, "is thinking", 0) == -1)
 		return (-1);
-	(args->philo.state) = THINK;
-	usleep(100);
-	if ((id % 2) == 0 && (args->philo_count) > 1)
-		usleep(500);
+	if ((id % 2) == 0 && (data->philo_count) > 1)
+		usleep(1000);
 	sem_wait(args->forks);
-	if (args->time_to_die == -1)
+	if (ph_log(args, data, "has taken a fork", 0) == -1)
 		return (-1);
-	(args->philo.state) = FORK_1;
-	usleep(100);
-	if (args->philo_count == 1)
+	if (data->philo_count == 1)
+		ph_usleep_till(data->last_meal,
+			data->time_to_die * 1000, ph_timestamp() + (data->time_to_die * 1000));
+	else
+		sem_wait(args->forks);
+	if (ph_log(args, data, "has taken a fork", 0) == -1)
+		return (-1);
+	return (0);
+}
+
+static int	ph_eat(t_args *args, t_data *data)
+{
+	if (ph_log(args, data, "is eating", (data->time_to_eat)) == -1)
+		return (-1);
+	sem_post(args->forks);
+	sem_post(args->forks);
+	if ((data->eat_count) == (data->eat_ammount))
 	{
-		while (args->time_to_die != -1)
-			usleep(10);
-		return (-1);
+		exit(0);
 	}
-	sem_wait(args->forks);
-	if (args->time_to_die == -1)
-		return (-1);
-	(args->philo.state) = FORK_2;
-	usleep(100);
 	return (0);
 }
 
-static int	ph_eat(t_args *args)
+static int	ph_sleep(t_args *args, t_data *data)
 {
-	if (args->time_to_die == -1)
-		return (-1);
-	(args->philo.state) = EAT;
-	usleep(100);
-	if (args->eat_ammount > 0)
-		(args->philo.eat_count) += 1;
-	(args->philo.last_meal) = ph_timestamp();
-	ph_usleep_till(args->philo.last_meal + args->time_to_eat);
-	sem_post(args->forks);
-	sem_post(args->forks);
-	if (args->eat_ammount > 0
-		&& (args->philo.eat_count) == (args->eat_ammount))
+	if (ph_log(args, data, "is sleeping", (data->time_to_sleep)) == -1)
 		return (-1);
 	return (0);
 }
 
-static int	ph_sleep(t_args *args)
+static void	ph_parse(t_args *args, t_data *data, int id)
 {
-	if (args->time_to_die == -1)
-		return (-1);
-	(args->philo.state) = SLEEP;
-	ph_usleep_till(ph_timestamp() + args->time_to_sleep);
-	return (0);
+	free(args->pids);
+	(data->eat_count) = 0;
+	(args->philo.id) = id;
+	(data->eat_ammount) = (args->eat_ammount);
+	(data->time_to_die) = (args->time_to_die);
+	(data->time_to_eat) = (args->time_to_eat);
+	(data->time_to_sleep) = (args->time_to_sleep);
+	(data->last_meal) = (args->philo.last_meal);
+	(data->philo_count) = (args->philo_count);
+	//(args->time_start) = ph_timestamp();
+	//(args->philo.last_meal) = (args->time_start);
 }

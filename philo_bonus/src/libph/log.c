@@ -5,56 +5,55 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/25 16:32:16 by rafernan          #+#    #+#             */
-/*   Updated: 2022/03/02 14:49:13 by rafernan         ###   ########.fr       */
+/*   Created: 2022/03/02 15:03:54 by rafernan          #+#    #+#             */
+/*   Updated: 2022/03/04 18:09:15 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 static int	ph_update(t_args *args, t_data *data, char *str, t_ulong time);
 
 int	ph_log(t_args *args, t_data *data, char *str, t_ulong time)
 {
-	if (ph_timestamp() - data->last_meal >= (t_ulong)data->time_to_die * 1000)
+	sem_wait(args->log_msg);
+	if (ph_timestamp() - args->philo.last_meal
+		>= ((t_ulong)args->time_to_die * 1000))
 	{
-		pthread_mutex_lock(&args->m1);
 		if (args->over != 1)
 		{
 			(args->over) = 1;
-			printf("%ld %d died\n",
-				(ph_timestamp() - args->time_start) / 1000, data->id + 1);
+			printf("%ld %d died\n",(ph_timestamp() - args->time_start) / 1000,
+				args->philo.id + 1);
 		}
-		pthread_mutex_unlock(&args->m1);
-		return (-1);
 	}
 	else if (str)
-		ph_update(args, data, str, time);
-	return (0);
+		return (ph_update(args, data, str, time * 1000));
+	return (-1);
 }
 
 static int	ph_update(t_args *args, t_data *data, char *str, t_ulong time)
 {
-	pthread_mutex_lock(&args->m1);
+	//printf("%ld %ld\n", ph_timestamp(), args->time_start);
 	if (args->over == 1)
-	{
-		pthread_mutex_unlock(&args->m1);
 		return (-1);
-	}
 	else
 	{
 		if (str[3] == 'e')
 		{
 			(data->last_meal) = ph_timestamp();
-			(args->p[data->id].last_meal) = (data->last_meal);
+			(args->philo.last_meal) = (data->last_meal);
 			if (data->eat_ammount != -1)
 				(data->eat_count) += 1;
 		}
 		printf("%ld %d %s\n",
-			(ph_timestamp() - args->time_start) / 1000, data->id + 1, str);
+			(ph_timestamp() - args->time_start) / 1000,
+				args->philo.id + 1, str);
 	}
-	pthread_mutex_unlock(&args->m1);
+	sem_post(args->log_msg);
 	if (time != 0)
-		ph_usleep_till(data, ph_timestamp() + time);
+		ph_usleep_till(data->last_meal, data->time_to_die, ph_timestamp() + time);
+	else
+		usleep(10);
 	return (0);
 }

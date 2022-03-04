@@ -38,7 +38,8 @@ _LIB	=		../../libs/
 
 CC		=		gcc
 AR		=		ar rcs
-CF		=		-g -Wall -Werror -Wextra
+CFLAGS	=		-Wall -Werror -Wextra
+CFLAGS	+=		-fsanitize=thread
 
 ################### FILES ###############
 
@@ -46,9 +47,10 @@ SRCS_	=		\
 				clear.c \
 				init.c \
 				process.c \
+				log.c \
 				utils.c \
 				monitor.c
-				
+
 SRCS	=		$(addprefix $(_SRC), $(SRCS_))
 OBJS	=		$(patsubst $(_SRC)%.c,$(_OBJ)%.o,$(SRCS))
 
@@ -57,7 +59,7 @@ OBJS	=		$(patsubst $(_SRC)%.c,$(_OBJ)%.o,$(SRCS))
 all: $(NAME)
 
 $(_OBJ)%.o: $(_SRC)%.c
-	$(CC) $(CF) -I. $(INCS) -c $< -o $@
+	$(CC) $(CFLAGS) -I. $(INCS) -c $< -o $@
 
 $(NAME): $(_LIB) $(_LIB)$(NAME)
 $(_LIB)$(NAME): $(_OBJ) $(OBJS)

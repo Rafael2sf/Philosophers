@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:33:21 by rafernan          #+#    #+#             */
-/*   Updated: 2022/03/02 12:09:51 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/03/02 16:31:27 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,6 +56,7 @@ typedef struct s_data
 	int		time_to_sleep;
 	int		eat_ammount;
 	int		eat_count;
+	int		philo_count;
 	t_ulong	last_meal;
 	t_phil	*self;
 }			t_data;

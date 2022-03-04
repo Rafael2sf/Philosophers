@@ -38,7 +38,7 @@ _BIN	=		./
 ############### COMPILER ################
 
 CC		=		gcc
-CFLAGS	=		-Wall -Werror -Wextra
+CFLAGS	=		-Wall -Werror -Wextra -fsanitize=thread
 
 ################ FILES ##################
 
@@ -59,7 +59,7 @@ $(_OBJ)%.o: $(_SRC)%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME): $(DEPS) $(OBJS)
-	$(CC) $(CFLAGS) $(LIBS) $(OBJS) -o $@ -L $(_LIB)
+	$(CC) $(CFLAGS) -pthread $(OBJS) -o $@ $(DEPS)
 
 ################ DEPS ###################
 

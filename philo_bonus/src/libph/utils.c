@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 13:56:47 by rafernan          #+#    #+#             */
-/*   Updated: 2022/02/21 18:01:15 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/03/04 16:59:44 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,16 +61,27 @@ int	ph_errorm(int error_code, char *error_message)
 	return (error_code);
 }
 
-long	ph_timestamp(void)
+t_ulong	ph_timestamp(void)
 {
 	t_time	curr_time;
 
 	gettimeofday(&curr_time, NULL);
-	return ((curr_time.tv_sec * 1000) + (curr_time.tv_usec / 1000));
+	return ((curr_time.tv_sec * 1000 * 1000) + (curr_time.tv_usec));
 }
 
-void	ph_usleep_till(long time)
+void	ph_usleep_till(t_ulong last_meal, t_ulong time_to_die, t_ulong time)
 {
-	while (ph_timestamp() < time)
-		(void)(time);
+	t_ulong	now;
+
+	while (1)
+	{
+		//printf("now = %ld, time_d = %ld, to = %ld\n", last_meal, time_to_die, time);
+		now = ph_timestamp();
+		//printf("time = %ld to %ld\n", now - last_meal, time_to_die * 1000);
+		if (now >= time)
+			break ;
+		if (now - last_meal >= (time_to_die * 1000))
+			break ;
+		usleep(100);
+	}
 }

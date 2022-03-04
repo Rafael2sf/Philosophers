@@ -38,7 +38,7 @@ _LIB	=		../../libs/
 
 CC		=		gcc
 AR		=		ar rcs
-CFLAGS	=		-g -Wall -Werror -Wextra
+CFLAGS	=		-g -Wall -Werror -Wextra -fsanitize=thread
 
 ################### FILES ###############
 
