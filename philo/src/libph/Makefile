@@ -48,7 +48,8 @@ SRCS_	=		\
 				clear.c \
 				thread.c \
 				wait.c \
-				log.c
+				log.c \
+				fork.c
 
 SRCS	=		$(addprefix $(_SRC), $(SRCS_))
 OBJS	=		$(patsubst $(_SRC)%.c,$(_OBJ)%.o,$(SRCS))

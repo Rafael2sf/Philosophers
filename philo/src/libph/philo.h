@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:33:21 by rafernan          #+#    #+#             */
-/*   Updated: 2022/03/02 16:31:27 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/03/08 14:31:32 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,7 @@ typedef struct s_phil
 typedef struct s_data
 {
 	int		id;
-	int		time_to_eat;
-	int		time_to_die;
-	int		time_to_sleep;
-	int		eat_ammount;
 	int		eat_count;
-	int		philo_count;
 	t_ulong	last_meal;
 	t_phil	*self;
 }			t_data;
@@ -78,7 +73,7 @@ int		ph_atoi(const char *str);
 size_t	ph_putstr(int fd, const char *s);
 int		ph_errorm(int error_code, char *error_message);
 t_ulong	ph_timestamp(void);
-void	ph_usleep_till(t_data *data, t_ulong time);
+void	ph_usleep_till(t_ulong last_meal, t_ulong time, t_ulong time_to_die);
 
 void	*ph_init_philosophers(t_args *args);
 void	ph_wait_philosophers(t_args *args);
@@ -86,5 +81,7 @@ void	ph_clear_philosophers(t_args *args);
 
 void	*ph_routine(void *args_ptr);
 int		ph_log(t_args *args, t_data *data, char *str, t_ulong sleep_time);
+int		ph_grab_fork(t_mutex *lf, t_mutex *rf, int id);
+int		ph_drop_forks(t_mutex *lf, t_mutex *rf);
 
 #endif

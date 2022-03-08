@@ -125,6 +125,5 @@ if [ -z "$1" ] || ([ ! -z "$1" ] && [ "$1" == "4" ]); then
 	iloop_die 3 500 300 300
 	iloop_die 4 300 150 150
 	iloop_die 4 310 200 100
-	iloop_die 5 600 200 200
 	printf "\n";
 fi

@@ -39,7 +39,7 @@ _BIN	=		./
 
 CC		=		gcc
 CFLAGS	=		-Wall -Werror -Wextra 
-CFLAGS	+=		-fsanitize=thread
+#CFLAGS	+=		-fsanitize=thread
 
 ################ FILES ##################
 
@@ -94,3 +94,5 @@ re: fclean all
 rebonus: fclean bonus
 
 .PHONY: all clean fclean re rebonus force
+
+# "--tool=helgrind" and "--tool=drd".

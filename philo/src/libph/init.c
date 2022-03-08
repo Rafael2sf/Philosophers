@@ -6,14 +6,14 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 14:08:14 by rafernan          #+#    #+#             */
-/*   Updated: 2022/03/04 17:58:41 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/03/08 14:32:30 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-//static void	*ph_init_malloc(t_args *args);
 static void	*ph_init_vars(t_args *args);
+static void	*ph_thread_error(t_args *args, int i);
 
 void	*ph_init_philosophers(t_args *args)
 {
@@ -31,7 +31,8 @@ void	*ph_init_philosophers(t_args *args)
 	(args->time_start) = ph_timestamp();
 	while (i < args->philo_count)
 	{
-		pthread_create(&(args->p)[i++].self, NULL, ph_routine, args);
+		if (pthread_create(&(args->p)[i++].self, NULL, ph_routine, args) != 0)
+			return (ph_thread_error(args, i));
 		usleep(100);
 	}
 	return (args);
@@ -46,6 +47,8 @@ static void	*ph_init_vars(t_args *args)
 	{
 		if (pthread_mutex_init(&(args->p)[i].right_fork, NULL) != 0)
 		{
+			while (--i >= 0)
+				pthread_mutex_destroy(&args->p[i].right_fork);
 			free(args->p);
 			return (NULL);
 		}
@@ -56,4 +59,24 @@ static void	*ph_init_vars(t_args *args)
 	}
 	(args->p[0].left_fork) = &(args->p[i - 1].right_fork);
 	return (args);
+}
+
+static void	*ph_thread_error(t_args *args, int i)
+{
+	pthread_mutex_lock(&args->m1);
+	(args->over) = 1;
+	pthread_mutex_unlock(&args->m1);
+	while (i >= 0)
+	{
+		pthread_join(args->p[i].self, NULL);
+		i--;
+	}
+	i = 0;
+	while (i != (args->philo_count))
+	{
+		pthread_mutex_destroy(&args->p[i].right_fork);
+		i++;
+	}
+	free(args->p);
+	return (NULL);
 }

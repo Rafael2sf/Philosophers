@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/18 10:43:30 by rafernan          #+#    #+#             */
-/*   Updated: 2022/03/04 17:36:37 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/03/08 17:43:01 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ void	*ph_init_philosphers(t_args *args)
 		return (NULL);
 	if (ph_open_sem_list(args) == -1)
 		return (ph_child_error(args));
-	(args->time_start) = ph_timestamp();
-	(args->philo.last_meal) = (args->time_start);
 	while (i < args->philo_count)
 	{
 		(args->pids[i]) = fork();
@@ -68,15 +66,14 @@ static void	*ph_fork_error(t_args *args, int i)
 	while (--i <= 0)
 		kill(args->pids[i], SIGKILL);
 	free(args->pids);
-	(args->pids) = NULL;
 	return (NULL);
 }
 
 static void	*ph_child_error(t_args *args)
 {
+	free(args->pids);
 	sem_close(args->forks);
 	sem_close(args->log_msg);
-	free(args->pids);
 	write(STDERR_FILENO, "Error\n", 6);
 	exit(1);
 	return (NULL);

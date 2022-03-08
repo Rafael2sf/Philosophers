@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 13:56:47 by rafernan          #+#    #+#             */
-/*   Updated: 2022/03/04 16:59:44 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/03/08 17:28:18 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,7 @@ void	ph_usleep_till(t_ulong last_meal, t_ulong time_to_die, t_ulong time)
 
 	while (1)
 	{
-		//printf("now = %ld, time_d = %ld, to = %ld\n", last_meal, time_to_die, time);
 		now = ph_timestamp();
-		//printf("time = %ld to %ld\n", now - last_meal, time_to_die * 1000);
 		if (now >= time)
 			break ;
 		if (now - last_meal >= (time_to_die * 1000))

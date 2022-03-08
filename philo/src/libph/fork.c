@@ -1,38 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   clear.c                                            :+:      :+:    :+:   */
+/*   fork.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/18 11:32:09 by rafernan          #+#    #+#             */
-/*   Updated: 2022/03/07 17:34:57 by rafernan         ###   ########.fr       */
+/*   Created: 2022/03/08 10:59:29 by rafernan          #+#    #+#             */
+/*   Updated: 2022/03/08 14:38:26 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_bonus.h"
+#include "philo.h"
 
-void	ph_clear_philosophers(t_args *args)
+int	ph_grab_fork(t_mutex *lf, t_mutex *rf, int id)
+{
+	int	ret;
+
+	if (id % 2 == 0)
+		ret = pthread_mutex_lock(lf);
+	else
+		ret = pthread_mutex_lock(rf);
+	return (ret);
+}
+
+int	ph_drop_forks(t_mutex *lf, t_mutex *rf)
 {
 	int	i;
-	int	val;
 
 	i = 0;
-	while (i < (args->philo_count))
-	{
-		waitpid(-1, &val, 0);
-		if (val == 256)
-		{
-			while (i < (args->philo_count))
-			{
-				kill(args->pids[i], SIGKILL);
-				i++;
-			}
-			break ;
-		}
-		i++;
-	}
-	free(args->pids);
-	sem_close(args->forks);
-	sem_close(args->log_msg);
+	i += pthread_mutex_unlock(lf);
+	i += pthread_mutex_unlock(rf);
+	return (i);
 }
