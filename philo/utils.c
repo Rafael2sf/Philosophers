@@ -6,11 +6,11 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 13:56:47 by rafernan          #+#    #+#             */
-/*   Updated: 2022/03/08 17:28:18 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/03/10 12:34:41 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo_bonus.h"
+#include "philo.h"
 
 size_t	ph_putstr(int fd, const char *s)
 {
@@ -69,7 +69,7 @@ t_ulong	ph_timestamp(void)
 	return ((curr_time.tv_sec * 1000 * 1000) + (curr_time.tv_usec));
 }
 
-void	ph_usleep_till(t_ulong last_meal, t_ulong time_to_die, t_ulong time)
+void	ph_usleep_till(t_ulong last_meal, t_ulong time, t_ulong time_to_die)
 {
 	t_ulong	now;
 
@@ -78,8 +78,8 @@ void	ph_usleep_till(t_ulong last_meal, t_ulong time_to_die, t_ulong time)
 		now = ph_timestamp();
 		if (now >= time)
 			break ;
-		if (now - last_meal >= (time_to_die * 1000))
+		if (now - last_meal >= time_to_die * 1000)
 			break ;
-		usleep(100);
+		usleep(10);
 	}
 }

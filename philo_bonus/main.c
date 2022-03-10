@@ -5,15 +5,16 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/10 12:31:13 by rafernan          #+#    #+#             */
-/*   Updated: 2022/03/08 16:22:29 by rafernan         ###   ########.fr       */
+/*   Created: 2022/03/09 17:08:55 by rafernan          #+#    #+#             */
+/*   Updated: 2022/03/10 14:21:32 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./libph/philo_bonus.h"
+#include "philo_bonus.h"
 
 static int	ph_parse_args(int argc, char **argv, t_args *args);
 static int	ph_check_arg(const char *s);
+static void	ph_del_sem(void);
 
 int	main(int argc, char **argv)
 {
@@ -21,16 +22,18 @@ int	main(int argc, char **argv)
 
 	if (argc != 5 && argc != 6)
 		return (ph_errorm(1, "Usage: ./prog number_of_philosophers time_to_die \
-time_to_eat time_to_sleep [number_of_times_each_must_eat]\n"));
+time_to_eat time_to_sleep [number_of_times_each_must_eat]\n", NULL));
 	if (ph_parse_args(argc, argv, &args) == -1)
 		return (2);
-	sem_unlink(SEM_LOG);
-	sem_unlink(SEM_FRK);
-	if (!ph_init_philosphers(&args))
-		return (ph_errorm(2, "Error\n"));
-	ph_clear_philosophers(&args);
-	sem_unlink(SEM_LOG);
-	sem_unlink(SEM_FRK);
+	ph_del_sem();
+	if (ph_init_philosophers(&args) == -1)
+		return (ph_errorm(3, "Error\n", NULL));
+	ph_wait_philosophers(&args);
+	free(args.pids);
+	sem_close(args.sem__frks);
+	sem_close(args.sem__logs);
+	sem_close(args.sem__stat);
+	ph_del_sem();
 	return (0);
 }
 
@@ -38,21 +41,22 @@ static int	ph_parse_args(int argc, char **argv, t_args *args)
 {
 	(args->philo_count) = ph_atoi(argv[1]);
 	if (!ph_check_arg(argv[1]) || args->philo_count <= 0)
-		return (ph_errorm(-1, "Invalid [number_of_philosophers]\n"));
+		return (ph_errorm(-1, "Invalid [number_of_philosophers]\n", NULL));
 	(args->time_to_die) = ph_atoi(argv[2]);
 	if (!ph_check_arg(argv[2]) || args->time_to_die < 0)
-		return (ph_errorm(-1, "Invalid [time_to_die]\n"));
+		return (ph_errorm(-1, "Invalid [time_to_die]\n", NULL));
 	(args->time_to_eat) = ph_atoi(argv[3]);
 	if (!ph_check_arg(argv[3]) || args->time_to_eat < 0)
-		return (ph_errorm(-1, "Invalid [time_to_eat]\n"));
+		return (ph_errorm(-1, "Invalid [time_to_eat]\n", NULL));
 	(args->time_to_sleep) = ph_atoi(argv[4]);
 	if (!ph_check_arg(argv[4]) || args->time_to_sleep < 0)
-		return (ph_errorm(-1, "Invalid [time_to_sleep]\n"));
+		return (ph_errorm(-1, "Invalid [time_to_sleep]\n", NULL));
 	if (argc == 6)
 	{
 		(args->eat_ammount) = ph_atoi(argv[5]);
 		if (!ph_check_arg(argv[5]) || args->eat_ammount <= 0)
-			return (ph_errorm(-1, "Invalid [number_of_times_each_must_eat]\n"));
+			return (ph_errorm(-1, "Invalid [number_of_times_each_must_eat]\n",
+					NULL));
 	}
 	else
 		(args->eat_ammount) = -1;
@@ -61,7 +65,7 @@ static int	ph_parse_args(int argc, char **argv, t_args *args)
 
 static int	ph_check_arg(const char *s)
 {
-	if (!s)
+	if (!s || !*s)
 		return (0);
 	while (*s == '\t' || *s == '\n' || *s == '\v'
 		|| *s == '\f' || *s == '\r' || *s == ' ')
@@ -73,4 +77,11 @@ static int	ph_check_arg(const char *s)
 	if (*s != '\0')
 		return (0);
 	return (1);
+}
+
+static void	ph_del_sem(void)
+{
+	sem_unlink(SEM__LOGS);
+	sem_unlink(SEM__FRKS);
+	sem_unlink(SEM__STAT);
 }

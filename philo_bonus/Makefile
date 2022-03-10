@@ -30,69 +30,51 @@ CPY		=		cp
 
 ################# DIRS ##################
 
-_SRC	=		src/
-_OBJ	=		obj/
-_LIB	=		libs/
-_BIN	=		./
+_OBJ	=		./obj/
 
 ############### COMPILER ################
 
-CC		=		gcc
+CC		=		cc
 CFLAGS	=		-Wall -Werror -Wextra 
-#CFLAGS	+=		-fsanitize=thread
+#CFLAGS	+=		-g -fsanitize=thread
 
 ################ FILES ##################
 
-SRCS	=		$(_SRC)main.c
+SRCS	=		\
+				init.c		\
+				utils.c		\
+				wait.c		\
+				routine.c	\
+				log.c		\
+				monitor.c	\
+				main.c
+
 OBJS	=		$(patsubst $(_SRC)%.c,$(_OBJ)%.o,$(SRCS))
-
-DEPS_	=		libph.a
-DEPS	=		$(addprefix $(_LIB), $(DEPS_))
-
-LIBS	=		$(patsubst lib%.a,-l%,$(DEPS_))
-LIBS	+=		-pthread
+LIBS	=		-pthread
 
 ################ RULES ##################
 
 all: $(NAME)
 
-$(_OBJ)%.o: $(_SRC)%.c
+$(_OBJ)%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(NAME): $(DEPS) $(OBJS)
-	$(CC) $(CFLAGS) $(LIBS) $(OBJS) -o $@ -L $(_LIB)
-
-################ DEPS ###################
-
-$(_LIB)libph.a: $(shell make -C src/libph -q libph.a || echo force)
-	$(MKE) libph.a -C src/libph/
+$(NAME): $(_OBJ) $(OBJS)
+	$(CC) $(CFLAGS) $(LIBS) $(OBJS) -o $(NAME)
 
 ############## STRUCTURE ################
 
 $(_OBJ):
-	$(MKD) $(_OBJ)
-
-$(_LIB):
-	$(MKD) $(_LIB)
-
-$(_SRC):
-	$(MKD) $(_SRC)
-
-$(_BIN):
-	$(MKD) $(_BIN)
+	$(MKD) $@
 
 ################### CLEAN ###############
 
 clean:
-	$(RMV) -r $(_OBJ) $(_LIB)
+	$(RMV) -r $(_OBJ)
 
 fclean: clean
-	$(RMV) -r $(NAME)
+	$(RMV) $(NAME)
 
 re: fclean all
 
-rebonus: fclean bonus
-
-.PHONY: all clean fclean re rebonus force
-
-# "--tool=helgrind" and "--tool=drd".
+.PHONY: all clean fclean re

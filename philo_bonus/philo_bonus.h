@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:33:21 by rafernan          #+#    #+#             */
-/*   Updated: 2022/03/08 17:42:02 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/03/10 14:10:42 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,61 +28,44 @@ typedef unsigned int	t_uint;
 typedef struct timeval	t_time;
 typedef pthread_t		t_thread;
 
-typedef struct s_data
-{
-	int			eat_count;
-	t_ulong		last_meal;
-}				t_data;
-
 typedef struct s_philo
 {
 	int			id;
-	t_thread	self;
+	int			eat_count;
 	t_ulong		last_meal;
-}			t_philo;
+	t_ulong		time_start;
+	t_thread	self;
+	int			dead;
+}				t_philo;
 
 typedef struct s_args
 {
-	int			*pids;
-	sem_t		*forks;
-	sem_t		*log_msg;
-	t_philo		philo;
-	t_ulong		time_start;
+	pid_t		*pids;
 	int			eat_ammount;
 	int			time_to_die;
 	int			philo_count;
 	int			time_to_eat;
 	int			time_to_sleep;
-	int			over;
+	sem_t		*sem__frks;
+	sem_t		*sem__logs;
+	sem_t		*sem__stat;
+	t_philo		me;
 }				t_args;
 
-enum
-{
-	THINK,
-	FORK_1,
-	FORK_2,
-	EAT,
-	SLEEP
-};
-# define MSG_SLEEP "is sleeping"
-# define MSG_EAT "is eating"
-# define MSG_FORK "has taken a fork"
-# define MSG_THINK "is thinking"
-# define STATES_COUNT 5
+# define SEM__FRKS "./sem_frks"
+# define SEM__LOGS "./sem_logs"
+# define SEM__STAT "./sem_stat"
 
-# define SEM_FRK "sem_frk"
-# define SEM_LOG "sem_log"
-
-int		ph_atoi(const char *str);
 size_t	ph_putstr(int fd, const char *s);
-int		ph_errorm(int error_code, char *error_message);
+int		ph_atoi(const char *str);
+int		ph_errorm(int error_code, char *error_message, t_args *args);
 t_ulong	ph_timestamp(void);
-void	ph_usleep_till(t_ulong last_meal, t_ulong time_to_die, t_ulong time);
+void	ph_usleep_till(t_ulong last_meal, t_ulong time_to_die, t_ulong ammount);
+void	ph_log(t_args *args, char *msg, int ms);
 
-void	*ph_init_philosphers(t_args *args);
-void	*ph_process(t_args *args, int id);
+int		ph_init_philosophers(t_args *args);
+void	ph_routine(t_args *args, int id);
 void	*ph_monitor(void *args_ptr);
-void	ph_clear_philosophers(t_args *args);
-int		ph_log(t_args *args, t_data *data, char *str, t_ulong time);
+void	ph_wait_philosophers(t_args *args);
 
 #endif

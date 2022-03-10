@@ -5,16 +5,16 @@
 #                                                     +:+ +:+         +:+      #
 #    By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2021/11/29 10:56:28 by rafernan          #+#    #+#              #
-#    Updated: 2021/12/16 16:28:53 by rafernan         ###   ########.fr        #
+#    Created: 2021/10/21 11:34:36 by rafernan          #+#    #+#              #
+#    Updated: 2021/12/14 14:12:00 by rafernan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-################ PROGRAM ################
+############# STATIC LIBRARY ############
 
 NAME	=		philosophers
 
-################ TERMINAL ###############
+################### TERMINAL ############
 
 RMV		=		rm -f
 MKD		=		mkdir
@@ -22,76 +22,60 @@ PRT		=		printf
 MKE		=		make
 CPY		=		cp
 
-################# COLORS ################
+################### COLORS ##############
 
 --GRN	=		\033[32m
 --RED	=		\033[31m
 --WHT	=		\033[39m
 
-################# DIRS ##################
+################### DIRS ################
 
-_SRC	=		src/
-_OBJ	=		obj/
-_LIB	=		libs/
-_BIN	=		./
+_OBJ	=		./obj/
 
-############### COMPILER ################
+################### COMPILER ############
 
-CC		=		gcc
-CFLAGS	=		-Wall -Werror -Wextra -fsanitize=thread
+CC		=		cc
+CFLAGS	=		-Wall -Werror -Wextra
+#CFLAGS	+=		-fsanitize=thread
 
-################ FILES ##################
+################### FILES ###############
 
-SRCS	=		$(_SRC)main.c
-OBJS	=		$(patsubst $(_SRC)%.c,$(_OBJ)%.o,$(SRCS))
+SRCS	=		\
+				init.c \
+				utils.c \
+				clear.c \
+				thread.c \
+				wait.c \
+				log.c \
+				fork.c \
+				main.c
 
-DEPS_	=		libph.a
-DEPS	=		$(addprefix $(_LIB), $(DEPS_))
+OBJS	=		$(patsubst %.c,$(_OBJ)%.o,$(SRCS))
+LIBS	=		-lpthread
 
-LIBS	=		$(patsubst lib%.a,-l%,$(DEPS_))
-LIBS	+=		-pthread
-
-################ RULES ##################
+################### RULES ###############
 
 all: $(NAME)
 
-$(_OBJ)%.o: $(_SRC)%.c
+$(_OBJ)%.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(NAME): $(DEPS) $(OBJS)
-	$(CC) $(CFLAGS) -pthread $(OBJS) -o $@ $(DEPS)
+$(NAME): $(_OBJ) $(OBJS)
+	$(CC) $(CFLAGS) $(LIBS) $(OBJS) -o $(NAME)
 
-################ DEPS ###################
-
-deps: $(DEPS)
-
-$(_LIB)libph.a: $(shell make -C src/libph -q libph.a || echo force)
-	$(MKE) libph.a -C src/libph/
-
-############## STRUCTURE ################
+################### STRUCTURE ###########
 
 $(_OBJ):
-	$(MKD) $(_OBJ)
-
-$(_LIB):
-	$(MKD) $(_LIB)
-
-$(_SRC):
-	$(MKD) $(_SRC)
-
-$(_BIN):
-	$(MKD) $(_BIN)
+	$(MKD) $@
 
 ################### CLEAN ###############
 
 clean:
-	$(RMV) -r $(_OBJ) $(_LIB)
+	$(RMV) -r $(_OBJ)
 
 fclean: clean
-	$(RMV) -r $(NAME)
+	$(RMV) $(NAME)
 
 re: fclean all
 
-rebonus: fclean bonus
-
-.PHONY: all clean fclean re rebonus force
+.PHONY: all clean fclean re

@@ -5,12 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/10 13:56:47 by rafernan          #+#    #+#             */
-/*   Updated: 2022/03/08 14:37:58 by rafernan         ###   ########.fr       */
+/*   Created: 2022/03/09 18:01:41 by rafernan          #+#    #+#             */
+/*   Updated: 2022/03/10 11:46:48 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philo.h"
+#include "philo_bonus.h"
 
 size_t	ph_putstr(int fd, const char *s)
 {
@@ -54,10 +54,16 @@ int	ph_atoi(const char *str)
 	return (flag * nb);
 }
 
-int	ph_errorm(int error_code, char *error_message)
+int	ph_errorm(int error_code, char *error_message, t_args *args)
 {
 	if (error_code != 0)
 		ph_putstr(STDERR_FILENO, error_message);
+	if (args)
+	{
+		sem_close(args->sem__frks);
+		sem_close(args->sem__logs);
+		sem_close(args->sem__stat);
+	}
 	return (error_code);
 }
 
@@ -69,17 +75,17 @@ t_ulong	ph_timestamp(void)
 	return ((curr_time.tv_sec * 1000 * 1000) + (curr_time.tv_usec));
 }
 
-void	ph_usleep_till(t_ulong last_meal, t_ulong time, t_ulong time_to_die)
+void	ph_usleep_till(t_ulong last_meal, t_ulong time_to_die, t_ulong ammount)
 {
 	t_ulong	now;
 
 	while (1)
 	{
 		now = ph_timestamp();
-		if (now >= time)
+		if (now >= ammount)
 			break ;
-		if (now - last_meal >= time_to_die * 1000)
+		if (now - last_meal >= (time_to_die * 1000))
 			break ;
-		usleep(10);
+		usleep(100);
 	}
 }

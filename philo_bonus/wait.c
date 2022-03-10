@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   clear.c                                            :+:      :+:    :+:   */
+/*   wait.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/02/18 11:32:09 by rafernan          #+#    #+#             */
-/*   Updated: 2022/03/07 17:34:57 by rafernan         ###   ########.fr       */
+/*   Created: 2022/03/09 17:38:45 by rafernan          #+#    #+#             */
+/*   Updated: 2022/03/10 12:36:29 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo_bonus.h"
 
-void	ph_clear_philosophers(t_args *args)
+void	ph_wait_philosophers(t_args *args)
 {
 	int	i;
 	int	val;
@@ -32,7 +32,4 @@ void	ph_clear_philosophers(t_args *args)
 		}
 		i++;
 	}
-	free(args->pids);
-	sem_close(args->forks);
-	sem_close(args->log_msg);
 }

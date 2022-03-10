@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:33:21 by rafernan          #+#    #+#             */
-/*   Updated: 2022/03/08 14:31:32 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/03/10 12:43:41 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,20 +24,6 @@ typedef unsigned int	t_uint;
 typedef struct timeval	t_time;
 typedef pthread_mutex_t	t_mutex;
 typedef pthread_t		t_thread;
-
-enum
-{
-	THINK,
-	FORK_1,
-	FORK_2,
-	EAT,
-	SLEEP
-};
-# define MSG_SLEEP "is sleeping"
-# define MSG_EAT "is eating"
-# define MSG_FORK "has taken a fork"
-# define MSG_THINK "is thinking"
-# define STATES_COUNT 5
 
 typedef struct s_phil
 {
@@ -65,7 +51,7 @@ typedef struct s_args
 	int		eat_ammount;
 	int		over;
 	t_ulong	time_start;
-	t_mutex	m1;
+	t_mutex	m__log;
 	t_phil	*p;
 }			t_args;
 

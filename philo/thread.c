@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 14:51:33 by rafernan          #+#    #+#             */
-/*   Updated: 2022/03/08 14:34:33 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/03/10 12:50:47 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,22 +37,22 @@ void	*ph_routine(void *args_ptr)
 			break ;
 		usleep(100);
 	}
-	pthread_mutex_lock(&args->m1);
+	pthread_mutex_lock(&args->m__log);
 	(data.self->alive) = 0;
-	pthread_mutex_unlock(&args->m1);
+	pthread_mutex_unlock(&args->m__log);
 	return (NULL);
 }
 
 static void	ph_parse_data(t_args *args, t_data *data, int *id_counter)
 {
-	pthread_mutex_lock(&args->m1);
+	pthread_mutex_lock(&args->m__log);
 	(data->id) = (*id_counter)++;
-	(data->last_meal) = (args->time_start);
-	(args->p[data->id].last_meal) = (args->time_start);
 	(data->eat_count) = 0;
 	(data->self) = &(args->p[data->id]);
 	(args->p)[(data->id)].alive = 1;
-	pthread_mutex_unlock(&args->m1);
+	(data->last_meal) = (args->time_start);
+	(args->p[data->id].last_meal) = (args->time_start);
+	pthread_mutex_unlock(&args->m__log);
 }
 
 static int	ph_forks(t_args *args, t_data *data)

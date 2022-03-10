@@ -6,11 +6,11 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/10 12:31:13 by rafernan          #+#    #+#             */
-/*   Updated: 2022/03/02 14:46:07 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/03/10 13:02:41 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libph/philo.h"
+#include "philo.h"
 
 static int	ph_parse_args(int argc, char **argv, t_args *args);
 static int	ph_check_arg(const char *s);

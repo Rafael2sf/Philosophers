@@ -1,6 +1,8 @@
 {
 	"files.associations": {
 		"__locale": "c",
-		"locale": "c"
+		"locale": "c",
+		"philo_bonus.h": "c",
+		"time.h": "c"
 	}
 }
