@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/25 16:32:16 by rafernan          #+#    #+#             */
-/*   Updated: 2022/03/10 12:55:15 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/03/11 16:48:18 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ int	ph_log(t_args *args, t_data *data, char *str, t_ulong time)
 				(data->eat_count) += 1;
 		}
 		printf("%ld %d %s\n",
-			ph_timestamp() / 1000, data->id + 1, str);
+			(ph_timestamp() - args->time_start) / 1000, data->id + 1, str);
 	}
 	pthread_mutex_unlock(&args->m__log);
 	if (time != 0)

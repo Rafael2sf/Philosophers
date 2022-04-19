@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 14:56:35 by rafernan          #+#    #+#             */
-/*   Updated: 2022/03/10 13:00:35 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/03/11 16:53:34 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ static void	ph_wait_over(t_args *args)
 			>= (t_ulong)(args->time_to_die * 1000))
 		{
 			printf("%ld %d died\n",
-				ph_timestamp() / 1000, i + 1);
+				(ph_timestamp() - args->time_start) / 1000, i + 1);
 			(args->over) = 1;
 			break ;
 		}
@@ -77,6 +77,6 @@ static void	ph_wait_over_reset(t_args *args, int *i, int *dead_count)
 	pthread_mutex_unlock(&args->m__log);
 	(*i) = 0;
 	(*dead_count) = 0;
-	usleep(1000);
+	usleep(500);
 	pthread_mutex_lock(&args->m__log);
 }

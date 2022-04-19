@@ -6,7 +6,7 @@
 #    By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/11/29 10:56:28 by rafernan          #+#    #+#              #
-#    Updated: 2021/12/16 16:28:53 by rafernan         ###   ########.fr        #
+#    Updated: 2022/03/25 15:16:22 by rafernan         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -36,7 +36,7 @@ _OBJ	=		./obj/
 
 CC		=		cc
 CFLAGS	=		-Wall -Werror -Wextra 
-#CFLAGS	+=		-g -fsanitize=thread
+CFLAGS	+=		-g -fsanitize=thread
 
 ################ FILES ##################
 

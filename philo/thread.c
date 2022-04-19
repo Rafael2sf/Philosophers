@@ -6,7 +6,7 @@
 /*   By: rafernan <rafernan@student.42lisboa.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/24 14:51:33 by rafernan          #+#    #+#             */
-/*   Updated: 2022/03/10 12:50:47 by rafernan         ###   ########.fr       */
+/*   Updated: 2022/03/11 16:45:19 by rafernan         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,9 +70,12 @@ static int	ph_forks(t_args *args, t_data *data)
 		return (-1);
 	}
 	if (args->philo_count == 1)
+	{
 		ph_usleep_till(data->last_meal, ph_timestamp()
 			+ ((t_ulong)args->time_to_die) * 1000,
 			args->time_to_die);
+		usleep(1000);
+	}
 	else
 		ph_grab_fork(args->p[data->id].left_fork,
 			&args->p[data->id].right_fork, data->id + 1);
