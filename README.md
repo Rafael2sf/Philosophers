@@ -1,9 +1,7 @@
 # Philosophers
-
+-- @ 42 lisbon
 ✅ Finished  
 Note: The bonus part is not working correctly and was not validated.
-
-@ 42 lisbon
 
 ## 📝 Description
 In this project, you will learn the basics of threading a process.
